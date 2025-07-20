@@ -8,19 +8,6 @@ from pathlib import Path
 from google.colab import drive
 from tensorflow.keras import backend as K
 
-# ---------- 0) Google Drive ----------
-drive.mount('/content/drive', force_remount=False)
-
-ROOT = Path('/content/drive/MyDrive/azero_3d')
-MODEL_DIR = ROOT / 'model'
-DATA_DIR  = ROOT / 'data'
-MODEL_DIR.mkdir(parents=True, exist_ok=True)
-DATA_DIR.mkdir(exist_ok=True)
-
-# ---------- 1) コード置き場に移動 ----------
-%cd /content/drive/MyDrive/sample/3dyonnmoku/train_code_3
-import sys; sys.path.append(os.getcwd())
-
 # ---------- 2) ユーザモジュール ----------
 from dual_network      import dual_network
 from self_play import self_play   # テスト現在500
