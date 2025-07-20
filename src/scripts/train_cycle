@@ -1,0 +1,82 @@
+# =====================================================
+# One-runtime AlphaZero 立体四目  学習ループ
+#   ・Google Drive にモデル／データ／state を直保存
+#   ・途中サイクルから再開
+# =====================================================
+import os, json, time, shutil
+from pathlib import Path
+from google.colab import drive
+from tensorflow.keras import backend as K
+
+# ---------- 0) Google Drive ----------
+drive.mount('/content/drive', force_remount=False)
+
+ROOT = Path('/content/drive/MyDrive/azero_3d')
+MODEL_DIR = ROOT / 'model'
+DATA_DIR  = ROOT / 'data'
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+DATA_DIR.mkdir(exist_ok=True)
+
+# ---------- 1) コード置き場に移動 ----------
+%cd /content/drive/MyDrive/sample/3dyonnmoku/train_code_3
+import sys; sys.path.append(os.getcwd())
+
+# ---------- 2) ユーザモジュール ----------
+from dual_network      import dual_network
+from self_play import self_play   # テスト現在500
+from train_network     import train_network
+from evaluate_network  import evaluate_network
+from evaluate_best_player import evaluate_best_player
+
+BEST_PATH  = MODEL_DIR / 'best_v2.h5'
+STATE_JSON = ROOT / 'state_v2.json'
+
+# ---------- 3) 初期 best_v2.h5 ----------
+if not BEST_PATH.exists():
+    dual_network()                                 # ./model/best_v2.h5 を生成
+    shutil.copy('./model/best_v2.h5', BEST_PATH)      # ★ Drive 側へも保存
+else:
+    print("🔄  best_v2.h5 を再利用")
+    shutil.copy(BEST_PATH, './model/best_v2.h5')      # ★ Drive → ローカルに必ずコピー
+
+
+# ---------- 4) 再開ポイント ----------
+start_cycle = 0
+if STATE_JSON.exists():
+    start_cycle = json.load(STATE_JSON.open())['cycle'] + 1
+    print(f"▶ 再開: cycle {start_cycle}")
+
+TOTAL_CYCLES = 10          #テスト 10→3
+
+# ---------- 5) メインループ ----------
+for cycle in range(start_cycle, TOTAL_CYCLES):
+    print(f"\n===== CYCLE {cycle+1}/{TOTAL_CYCLES} =====")
+    self_play()                   # ① 自己対戦
+    train_network()               # ② 再学習
+    updated = evaluate_network()  # ③ best 更新判定
+    if updated:
+        evaluate_best_player()    # ④ 任意テスト
+
+    # ⑤ latest バックアップ
+    shutil.copy('./model/latest_v2.h5', MODEL_DIR / f'latest_v2_{cycle:02d}.h5')
+
+    # best が更新された時は両方向で同期
+    if updated:
+        shutil.copy('./model/best_v2.h5', BEST_PATH)          # ローカル→Drive
+    else:
+        shutil.copy(BEST_PATH, './model/best_v2.h5')          # Drive→ローカル（念のため）
+
+    # ⑥ state 更新
+    json.dump({'cycle': cycle,
+               'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')},
+              STATE_JSON.open('w'))
+
+    # ⑦ メモリ解放
+    K.clear_session()
+
+print("\n🎉 すべて完了  •  best =", BEST_PATH)
+
+# 全処理が完了したらセッションを終了
+print("全学習完了。セッションを終了します。")
+import os
+os.kill(os.getpid(), 9)
