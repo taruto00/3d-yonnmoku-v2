@@ -16,7 +16,7 @@ from typing import List
 from game import State, SIZE, idx
 
 # ====== best.h5 をロードし、推論関数を作る ======
-BEST_PATH = Path("/content/drive/MyDrive/azero_3d/model/best_v2.h5")
+BEST_PATH = Path(".model/best_v2.h5")
 if not BEST_PATH.exists():
     sys.exit("❌ best_v2.h5 が見つかりません。学習 or コピー後に再実行してください。")
 
