@@ -20,16 +20,27 @@ AlphaZero-style 自己対戦学習システムです。
 
 src/
 ├── game.py # 盤面クラス・合法手生成・勝敗判定
+
 ├── dual_network.py # Keras モデル定義・保存・読み込み
+
 ├── pv_mcts.py # Policy-Value MCTS 本体
+
 ├── solve_mate.py # 詰み検出アルゴリズム
+
 ├── self_play.py # 自己対局データ生成
+
 ├── train_net.py # ネットワーク単体学習
+
 ├── evaluate_net.py # ネットワーク評価
+
 ├── evaluate_best.py # ベストモデルの定期評価
+
 ├── train_cycle.py # Self-Play → Train → Eval のループ
+
 └── play_best.py # 人間 vs AI（CLI）
+
 data/ # 自己対局履歴 (.pickle) 等
+
 model/ # 学習済み重み (.h5)
 
 
