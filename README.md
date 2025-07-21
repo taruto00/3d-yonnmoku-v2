@@ -3,7 +3,7 @@
 
 ---
 
-## 📖 Overview
+##  Overview
 本リポジトリは **4×4×4 立体四目並べ（Yonmoku）** を対象とした  
 AlphaZero-style 自己対戦学習システムです。  
 
@@ -16,7 +16,7 @@ AlphaZero-style 自己対戦学習システムです。
 
 ---
 
-## 🗂️ Directory
+##  Directory
 
 src/
 ├── game.py # 盤面クラス・合法手生成・勝敗判定
@@ -48,7 +48,7 @@ model/ # 学習済み重み (.h5)
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. 環境構築
 ```bash
