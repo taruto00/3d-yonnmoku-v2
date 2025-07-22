@@ -181,19 +181,6 @@ def tsumi(state:"State", depth:int)->int:
         if tsumi(state.next_from_index(mv),1)==-1: return +1
     return 0
 
-def mate_in_two_sequence(state:"State")->List[int]|None:
-    if tsumi(state,2)!=1: return None
-    cand = collect_pre_threats(state.pieces,state.enemy_pieces)+\
-           collect_float_pre_threats(state.pieces,state.enemy_pieces)
-    for mv1 in cand:
-        s1 = state.next_from_index(mv1)
-        blk = find_forced_block(s1)
-        if blk is None: continue
-        s2 = s1.next_from_index(blk)
-        wins = collect_threats(s2.pieces,s2.enemy_pieces)
-        if wins: return [mv1, blk, wins[0]]
-    return None
-
 # -------------------------------------------------------------
 # 強制ライン探索（深さ ply_limit まで）
 #   戻り値:  (verdict, path)
@@ -297,7 +284,7 @@ if __name__ == "__main__":
         else:
             print("必勝だが手順抽出に失敗しました。")
     elif verdict == -1:
-        print("現手番は Mate-in-2 で詰まされています。")
+        print("現手番は詰まされています。")
     else:
         print("未確定（深読みが必要）。")
 """
