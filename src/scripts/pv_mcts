@@ -20,7 +20,7 @@ from dual_network  import DN_INPUT_SHAPE            # (4,4,14)
 
 
 # -------------------- 定数 --------------------
-PV_EVALUATE_COUNT = 50          # 1 盤面あたりシミュレーション数
+PV_EVALUATE_COUNT = 100 #50          # 1 盤面あたりシミュレーション数
 MAX_BATCH         = 32          # たまった葉ノードがこの数を超えたらまとめて推論
 SIZE  = DN_INPUT_SHAPE[0]    # 4
 CHAN  = DN_INPUT_SHAPE[2]    # 14   ← ここを 9→14
