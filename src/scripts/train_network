@@ -273,11 +273,18 @@ def train_network():
      #   elif epoch < 20: return 2.5e-4      # 10–19 epoch
      #   elif epoch < 30: return 1e-4        # 20–29 epoch
      #   else:            return 5e-5        # 30–39 epoch
+    #def step_decay(epoch):
+     #   """epoch に応じて学習率を 4 段階で減衰させる"""
+     #   if   epoch < 20: return 5e-4        # 0– 9 epoch
+     #   elif epoch < 40: return 2.5e-4      # 10–19 epoch
+     #   elif epoch < 60: return 1e-4        # 20–29 epoch
+     #   else:            return 5e-5        # 30–39 epoch
+
     def step_decay(epoch):
         """epoch に応じて学習率を 4 段階で減衰させる"""
-        if   epoch < 20: return 5e-4        # 0– 9 epoch
-        elif epoch < 40: return 2.5e-4      # 10–19 epoch
-        elif epoch < 60: return 1e-4        # 20–29 epoch
+        if   epoch < 16: return 5e-4        # 0– 9 epoch
+        elif epoch < 36: return 2.5e-4      # 10–19 epoch
+        elif epoch < 56: return 1e-4        # 20–29 epoch
         else:            return 5e-5        # 30–39 epoch
 
     lr_sched = LearningRateScheduler(step_decay, verbose=0)
