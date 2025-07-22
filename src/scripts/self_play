@@ -22,7 +22,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 
 # -------------------- ハイパーパラメータ --------------------
-SP_GAME_COUNT   = 500        # セルフプレイゲーム数（本家 25000）
+SP_GAME_COUNT   = 750 #500        # セルフプレイゲーム数（本家 25000）
 SP_TEMPERATURE  = 0.8        # ボルツマン温度
 
 # -------------------- 先手視点の価値 ------------------------
