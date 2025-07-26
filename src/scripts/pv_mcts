@@ -17,6 +17,7 @@ from tensorflow.keras.models import load_model
 
 from game   import State,LINES76, tsumi, local_tactics_value, dr2_plane, drp_plane, ketsu_even_odd_filtered, collect_pre_threats, collect_float_pre_threats
 from dual_network  import DN_INPUT_SHAPE            # (4,4,14)
+frmo solve_mate import proof_search
 
 
 # -------------------- 定数 --------------------
@@ -180,11 +181,11 @@ def pv_mcts_scores(model, state: State, temperature: float, num_simulations: int
 
             # 2) 未展開：バッファに追加して仮の 0 を返す
             if self.children is None:
-                # 2) ★ TSS フック ★
-                solved, v = local_tactics_value(self.state)
-                if solved:
-                    self._update(v)
-                    return v   # ここで終了 → プレイアウトしない
+                # 2) ★ フック ★
+                verdict, _ = proof_search(self.state, ply_limit=27)      # 手順は今は使わない
+                if verdict != 0:                           # +1 か -1 のときだけ確定
+                    self._update(float(verdict))           # 評価値をfloatに変換
+                    return float(verdict)                  # 評価を親へ返す
 
                 leaf_states.append(encode_state(self.state))
                 leaf_nodes.append(self)
